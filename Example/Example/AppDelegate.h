@@ -1,9 +1,8 @@
 //
 //  AppDelegate.h
-//  JTHamburgerButton
+//  Example
 //
-//  Created by Jonathan on 22/03/15.
-//  Copyright (c) 2015 Jonathan Tribouharet. All rights reserved.
+//  Created by Jonathan Tribouharet
 //
 
 #import <UIKit/UIKit.h>
@@ -11,7 +10,6 @@
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
 
 @property (strong, nonatomic) UIWindow *window;
-
 
 @end
 

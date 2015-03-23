@@ -1,9 +1,8 @@
 //
 //  AppDelegate.m
-//  JTHamburgerButton
+//  Example
 //
-//  Created by Jonathan on 22/03/15.
-//  Copyright (c) 2015 Jonathan Tribouharet. All rights reserved.
+//  Created by Jonathan Tribouharet
 //
 
 #import "AppDelegate.h"

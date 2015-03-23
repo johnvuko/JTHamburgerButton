@@ -1,0 +1,14 @@
+PODS:
+  - JTHamburgerButton (1.0.0)
+
+DEPENDENCIES:
+  - JTHamburgerButton (from `..`)
+
+EXTERNAL SOURCES:
+  JTHamburgerButton:
+    :path: ..
+
+SPEC CHECKSUMS:
+  JTHamburgerButton: 600d63d9db369203d0d298dcbf2958368d4338b4
+
+COCOAPODS: 0.35.0
