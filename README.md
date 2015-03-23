@@ -41,7 +41,7 @@ With [CocoaPods](http://cocoapods.org/), add this line to your Podfile.
 - (IBAction)didBackButtonTouch:(JTHamburgerButton *)sender
 {
     if(sender.currentMode == JTHamburgerButtonModeHamburger){
-        [sender setCurrentMode:JTHamburgerButtonModeBack withAnimation:.3];
+        [sender setCurrentMode:JTHamburgerButtonModeArrow withAnimation:.3];
     }
     else{
         [sender setCurrentMode:JTHamburgerButtonModeHamburger withAnimation:.3];
@@ -65,7 +65,7 @@ The method `setCurrentMode:WithAnimation` animates the transition from one mode 
 
 There are three modes:
 - JTHamburgerButtonModeHamburger
-- JTHamburgerButtonModeBack
+- JTHamburgerButtonModeArrow
 - JTHamburgerButtonModeCross
 
 ### Customize the design

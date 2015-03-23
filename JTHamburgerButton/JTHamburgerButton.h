@@ -9,7 +9,7 @@
 
 typedef NS_ENUM(NSInteger, JTHamburgerButtonMode) {
     JTHamburgerButtonModeHamburger,
-    JTHamburgerButtonModeBack,
+    JTHamburgerButtonModeArrow,
     JTHamburgerButtonModeCross
 };
 

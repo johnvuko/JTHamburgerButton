@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = "JTHamburgerButton"
-  s.version      = "1.0.0"
+  s.version      = "1.0.1"
   s.summary      = "An animated hamburger button for iOS"
   s.homepage     = "https://github.com/jonathantribouharet/JTHamburgerButton"
   s.license      = { :type => 'MIT' }

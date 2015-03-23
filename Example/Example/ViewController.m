@@ -16,7 +16,7 @@
 - (IBAction)didBackButtonTouch:(JTHamburgerButton *)sender
 {
     if(sender.currentMode == JTHamburgerButtonModeHamburger){
-        [sender setCurrentMode:JTHamburgerButtonModeBack withAnimation:.3];
+        [sender setCurrentMode:JTHamburgerButtonModeArrow withAnimation:.3];
     }
     else{
         [sender setCurrentMode:JTHamburgerButtonModeHamburger withAnimation:.3];

@@ -72,8 +72,8 @@
         case JTHamburgerButtonModeHamburger:
             [self transformModeHamburgerWithAnimation:duration];
             break;
-        case JTHamburgerButtonModeBack:
-            [self transformModeBackWithAnimation:duration];
+        case JTHamburgerButtonModeArrow:
+            [self transformModeArrowWithAnimation:duration];
             break;
         case JTHamburgerButtonModeCross:
             [self transformModeCrossWithAnimation:duration];
@@ -112,8 +112,8 @@
         case JTHamburgerButtonModeHamburger:
             [self transformModeHamburger];
             break;
-        case JTHamburgerButtonModeBack:
-            [self transformModeBack];
+        case JTHamburgerButtonModeArrow:
+            [self transformModeArrow];
             break;
         case JTHamburgerButtonModeCross:
             [self transformModeCross];
@@ -150,7 +150,7 @@
     bottomLayer.transform = CATransform3DIdentity;
 }
 
-- (void)transformModeBack
+- (void)transformModeArrow
 {
     {
         CGFloat angle = M_PI + M_PI_4;
@@ -253,22 +253,22 @@
 
 - (void)transformModeHamburgerWithAnimation:(CGFloat)duration
 {
-    if(self.currentMode == JTHamburgerButtonModeBack){
+    if(self.currentMode == JTHamburgerButtonModeArrow){
         {
             CAKeyframeAnimation *animation = [self createKeyFrameAnimation:duration];
-            animation.values = [self reverseValues:[self backValuesTopLayer]];
+            animation.values = [self reverseValues:[self arrowValuesTopLayer]];
             [topLayer addAnimation:animation forKey:@"transform"];
         }
         
         {
             CAKeyframeAnimation *animation = [self createKeyFrameAnimation:duration];
-            animation.values = [self reverseValues:[self backValuesMiddleLayer]];
+            animation.values = [self reverseValues:[self arrowValuesMiddleLayer]];
             [middleLayer addAnimation:animation forKey:@"transform"];
         }
         
         {
             CAKeyframeAnimation *animation = [self createKeyFrameAnimation:duration];
-            animation.values = [self reverseValues:[self backValuesBottomLayer]];
+            animation.values = [self reverseValues:[self arrowValuesBottomLayer]];
             [bottomLayer addAnimation:animation forKey:@"transform"];
         }
     }
@@ -293,23 +293,23 @@
     }
 }
 
-- (void)transformModeBackWithAnimation:(CGFloat)duration
+- (void)transformModeArrowWithAnimation:(CGFloat)duration
 {
     {
         CAKeyframeAnimation *animation = [self createKeyFrameAnimation:duration];
-        animation.values = [self backValuesTopLayer];
+        animation.values = [self arrowValuesTopLayer];
         [topLayer addAnimation:animation forKey:@"transform"];
     }
     
     {
         CAKeyframeAnimation *animation = [self createKeyFrameAnimation:duration];
-        animation.values = [self backValuesMiddleLayer];
+        animation.values = [self arrowValuesMiddleLayer];
         [middleLayer addAnimation:animation forKey:@"transform"];
     }
     
     {
         CAKeyframeAnimation *animation = [self createKeyFrameAnimation:duration];
-        animation.values = [self backValuesBottomLayer];
+        animation.values = [self arrowValuesBottomLayer];
         [bottomLayer addAnimation:animation forKey:@"transform"];
     }
 }
@@ -356,9 +356,9 @@
     return newValues;
 }
 
-#pragma mark - Mode Back
+#pragma mark - Mode Arrow
 
-- (NSArray *)backValuesTopLayer
+- (NSArray *)arrowValuesTopLayer
 {
     CGFloat endAngle = M_PI + M_PI_4;
     CGFloat endScaleFactor = .5;
@@ -409,7 +409,7 @@
     return values;
 }
 
-- (NSArray *)backValuesMiddleLayer
+- (NSArray *)arrowValuesMiddleLayer
 {
     CGFloat endAngle = M_PI;
     CGFloat endScaleFactor = .8;
@@ -435,7 +435,7 @@
     return values;
 }
 
-- (NSArray *)backValuesBottomLayer
+- (NSArray *)arrowValuesBottomLayer
 {
     CGFloat endAngle = M_PI - M_PI_4;
     CGFloat endScaleFactor = .5;
