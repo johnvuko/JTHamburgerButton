@@ -61,7 +61,7 @@ With [CocoaPods](http://cocoapods.org/), add this line to your Podfile.
 @end
 ```
 
-The method `setCurrentMode:WithAnimation` animates the transition from one mode to another. There is also `setCurrentMode` which changes the view without transition;
+The method `setCurrentMode:WithAnimation` animates the transition from one mode to another. There is also `setCurrentMode` which changes the view without transition.
 
 There are three modes:
 - JTHamburgerButtonModeHamburger
