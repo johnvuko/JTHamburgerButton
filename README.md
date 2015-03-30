@@ -41,27 +41,27 @@ With [CocoaPods](http://cocoapods.org/), add this line to your Podfile.
 - (IBAction)didBackButtonTouch:(JTHamburgerButton *)sender
 {
     if(sender.currentMode == JTHamburgerButtonModeHamburger){
-        [sender setCurrentMode:JTHamburgerButtonModeArrow withAnimation:.3];
+        [sender setCurrentModeWithAnimation:JTHamburgerButtonModeArrow];
     }
     else{
-        [sender setCurrentMode:JTHamburgerButtonModeHamburger withAnimation:.3];
+        [sender setCurrentModeWithAnimation:JTHamburgerButtonModeHamburger];
     }
 }
 
 - (IBAction)didCloseButtonTouch:(JTHamburgerButton *)sender
 {
     if(sender.currentMode == JTHamburgerButtonModeHamburger){
-        [sender setCurrentMode:JTHamburgerButtonModeCross withAnimation:.3];
+        [sender setCurrentModeWithAnimation:JTHamburgerButtonModeCross];
     }
     else{
-        [sender setCurrentMode:JTHamburgerButtonModeHamburger withAnimation:.3];
+        [sender setCurrentModeWithAnimation:JTHamburgerButtonModeHamburger];
     }
 }
 
 @end
 ```
 
-The method `setCurrentMode:WithAnimation` animates the transition from one mode to another. There is also `setCurrentMode` which changes the view without transition.
+The method `setCurrentModeWithAnimation` animates the transition from one mode to another. There is also `setCurrentMode` which changes the view without transition.
 
 There are three modes:
 - JTHamburgerButtonModeHamburger
@@ -74,6 +74,7 @@ There are three modes:
 - `lineWidth`
 - `lineSpacing`
 - `lineColor`
+- `animationDuration`
 
 After the change of one of this properties you have to call `updateAppearance` to update the view.
 

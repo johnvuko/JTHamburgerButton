@@ -48,6 +48,8 @@
     self.lineSpacing = 3.5;
     self.lineWidth = 24.;
     
+    self.animationDuration = .3;
+    
     self->_currentMode = JTHamburgerButtonModeHamburger;
     [self updateAppearance];
 }
@@ -62,7 +64,12 @@
     [self updateAppearance];
 }
 
-- (void)setCurrentMode:(JTHamburgerButtonMode)currentMode withAnimation:(CGFloat)duration
+- (void)setCurrentModeWithAnimation:(JTHamburgerButtonMode)currentMode
+{
+    [self setCurrentModeWithAnimation:currentMode duration:self.animationDuration];
+}
+
+- (void)setCurrentModeWithAnimation:(JTHamburgerButtonMode)currentMode duration:(CGFloat)duration
 {
     if(self.currentMode == currentMode){
         return;

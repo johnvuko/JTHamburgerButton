@@ -20,9 +20,12 @@ typedef NS_ENUM(NSInteger, JTHamburgerButtonMode) {
 @property (nonatomic) CGFloat lineSpacing;
 @property (nonatomic) UIColor *lineColor;
 
+@property (nonatomic) CGFloat animationDuration;
+
 @property (nonatomic) JTHamburgerButtonMode currentMode;
 
-- (void)setCurrentMode:(JTHamburgerButtonMode)currentMode withAnimation:(CGFloat)duration;
+- (void)setCurrentModeWithAnimation:(JTHamburgerButtonMode)currentMode;
+- (void)setCurrentModeWithAnimation:(JTHamburgerButtonMode)currentMode duration:(CGFloat)duration;
 
 - (void)updateAppearance;
 

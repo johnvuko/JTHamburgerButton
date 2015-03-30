@@ -16,20 +16,20 @@
 - (IBAction)didBackButtonTouch:(JTHamburgerButton *)sender
 {
     if(sender.currentMode == JTHamburgerButtonModeHamburger){
-        [sender setCurrentMode:JTHamburgerButtonModeArrow withAnimation:.3];
+        [sender setCurrentModeWithAnimation:JTHamburgerButtonModeArrow];
     }
     else{
-        [sender setCurrentMode:JTHamburgerButtonModeHamburger withAnimation:.3];
+        [sender setCurrentModeWithAnimation:JTHamburgerButtonModeHamburger];
     }
 }
 
 - (IBAction)didCloseButtonTouch:(JTHamburgerButton *)sender
 {
     if(sender.currentMode == JTHamburgerButtonModeHamburger){
-        [sender setCurrentMode:JTHamburgerButtonModeCross withAnimation:.3];
+        [sender setCurrentModeWithAnimation:JTHamburgerButtonModeCross];
     }
     else{
-        [sender setCurrentMode:JTHamburgerButtonModeHamburger withAnimation:.3];
+        [sender setCurrentModeWithAnimation:JTHamburgerButtonModeHamburger];
     }
 }
 
