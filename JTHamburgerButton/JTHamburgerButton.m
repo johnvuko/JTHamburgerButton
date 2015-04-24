@@ -7,6 +7,8 @@
 
 #import "JTHamburgerButton.h"
 
+#define MIDDLE_SCALE_FACTOR .8
+
 @interface JTHamburgerButton (){
     CAShapeLayer *topLayer;
     CAShapeLayer *middleLayer;
@@ -75,15 +77,45 @@
         return;
     }
     
-    switch (currentMode) {
+    switch (self.currentMode) {
         case JTHamburgerButtonModeHamburger:
-            [self transformModeHamburgerWithAnimation:duration];
+            switch (currentMode) {
+                case JTHamburgerButtonModeHamburger:
+                    // Nothing
+                    break;
+                case JTHamburgerButtonModeArrow:
+                    [self transformFromHamburgerToArrow:duration];
+                    break;
+                case JTHamburgerButtonModeCross:
+                    [self transformFromHamburgerToCross:duration];
+                    break;
+            }
             break;
         case JTHamburgerButtonModeArrow:
-            [self transformModeArrowWithAnimation:duration];
+            switch (currentMode) {
+                case JTHamburgerButtonModeHamburger:
+                    [self transformFromArrowToHamburger:duration];
+                    break;
+                case JTHamburgerButtonModeArrow:
+                    // Nothing
+                    break;
+                case JTHamburgerButtonModeCross:
+                    [self transformFromArrowToCross:duration];
+                    break;
+            }
             break;
         case JTHamburgerButtonModeCross:
-            [self transformModeCrossWithAnimation:duration];
+            switch (currentMode) {
+                case JTHamburgerButtonModeHamburger:
+                    [self transformFromCrossToHamburger:duration];
+                    break;
+                case JTHamburgerButtonModeArrow:
+                    [self transformFromCrossToArrow:duration];
+                    break;
+                case JTHamburgerButtonModeCross:
+                    // Nothing
+                    break;
+            }
             break;
     }
     
@@ -166,16 +198,16 @@
         CATransform3D t = CATransform3DIdentity;
         
         // Translate to bottom position
-        CGFloat translateY = (middleLayer.position.y + (self.lineWidth / 2.)) - topLayer.position.y;
         CGFloat translateX = 0;
+        CGFloat translateY = (middleLayer.position.y + (self.lineWidth / 2.)) - topLayer.position.y;
         
         // Translate for 45 degres rotation
-        translateY += (1. - fabs(sinf(angle))) * self.lineWidth / 2. * -1. * (1. / scaleFactor);
         translateX += (1. - fabs(cosf(angle))) * self.lineWidth / 2. * -1. * (1. / scaleFactor);
+        translateY += (1. - fabs(sinf(angle))) * self.lineWidth / 2. * -1. * (1. / scaleFactor);
         
         // Hack
-        translateY -= 1.;
         translateX -= 1.;
+        translateY -= 1.;
         
         t = CATransform3DTranslate(t, translateX, translateY, 0);
         t = CATransform3DRotate(t, angle, 0, 0, 1);
@@ -185,7 +217,7 @@
     }
     
     {
-        CGFloat scaleFactor = .8;
+        CGFloat scaleFactor = MIDDLE_SCALE_FACTOR;
         
         CATransform3D t = CATransform3DIdentity;
         
@@ -203,16 +235,16 @@
         CATransform3D t = CATransform3DIdentity;
         
         // Translate to bottom position
-        CGFloat translateY = (middleLayer.position.y - (self.lineWidth / 2.)) - bottomLayer.position.y;
         CGFloat translateX = 0;
+        CGFloat translateY = (middleLayer.position.y - (self.lineWidth / 2.)) - bottomLayer.position.y;
         
         // Translate for 45 degres rotation
-        translateY += (1. - fabs(sinf(angle))) * self.lineWidth / 2. * (1. / scaleFactor);
         translateX += (1. - fabs(cosf(angle))) * self.lineWidth / 2. * -1. * (1. / scaleFactor);
+        translateY += (1. - fabs(sinf(angle))) * self.lineWidth / 2. * (1. / scaleFactor);
         
         // Hack
-        translateY += 1.;
         translateX -= 1.;
+        translateY += 1.;
         
         t = CATransform3DTranslate(t, translateX, translateY, 0);
         t = CATransform3DRotate(t, angle, 0, 0, 1);
@@ -232,14 +264,14 @@
         CATransform3D t = CATransform3DIdentity;
         t = CATransform3DTranslate(t, 0, translateY, 0);
         t = CATransform3DRotate(t, angle, 0, 0, 1);
-
+        
         topLayer.transform = t;
     }
     
     {
         CATransform3D t = CATransform3DIdentity;
         t = CATransform3DScale(t, 0, 1., 1.);
-   
+        
         middleLayer.transform = t;
     }
     
@@ -258,89 +290,133 @@
 
 #pragma mark - Transform with animation
 
-- (void)transformModeHamburgerWithAnimation:(CGFloat)duration
-{
-    if(self.currentMode == JTHamburgerButtonModeArrow){
-        {
-            CAKeyframeAnimation *animation = [self createKeyFrameAnimation:duration];
-            animation.values = [self reverseValues:[self arrowValuesTopLayer]];
-            [topLayer addAnimation:animation forKey:@"transform"];
-        }
-        
-        {
-            CAKeyframeAnimation *animation = [self createKeyFrameAnimation:duration];
-            animation.values = [self reverseValues:[self arrowValuesMiddleLayer]];
-            [middleLayer addAnimation:animation forKey:@"transform"];
-        }
-        
-        {
-            CAKeyframeAnimation *animation = [self createKeyFrameAnimation:duration];
-            animation.values = [self reverseValues:[self arrowValuesBottomLayer]];
-            [bottomLayer addAnimation:animation forKey:@"transform"];
-        }
-    }
-    else{
-        {
-            CAKeyframeAnimation *animation = [self createKeyFrameAnimation:duration];
-            animation.values = [self reverseValues:[self crossValuesTopLayer]];
-            [topLayer addAnimation:animation forKey:@"transform"];
-        }
-        
-        {
-            CAKeyframeAnimation *animation = [self createKeyFrameAnimation:duration];
-            animation.values = [self reverseValues:[self crossValuesMiddleLayer]];
-            [middleLayer addAnimation:animation forKey:@"transform"];
-        }
-        
-        {
-            CAKeyframeAnimation *animation = [self createKeyFrameAnimation:duration];
-            animation.values = [self reverseValues:[self crossValuesBottomLayer]];
-            [bottomLayer addAnimation:animation forKey:@"transform"];
-        }
-    }
-}
-
-- (void)transformModeArrowWithAnimation:(CGFloat)duration
+- (void)transformFromHamburgerToArrow:(CGFloat)duration
 {
     {
         CAKeyframeAnimation *animation = [self createKeyFrameAnimation:duration];
-        animation.values = [self arrowValuesTopLayer];
+        animation.values = [self hamburgerToArrowValuesTopLayer];
         [topLayer addAnimation:animation forKey:@"transform"];
     }
     
     {
         CAKeyframeAnimation *animation = [self createKeyFrameAnimation:duration];
-        animation.values = [self arrowValuesMiddleLayer];
+        animation.values = [self hamburgerToArrowValuesMiddleLayer];
         [middleLayer addAnimation:animation forKey:@"transform"];
     }
     
     {
         CAKeyframeAnimation *animation = [self createKeyFrameAnimation:duration];
-        animation.values = [self arrowValuesBottomLayer];
+        animation.values = [self hamburgerToArrowValuesBottomLayer];
         [bottomLayer addAnimation:animation forKey:@"transform"];
     }
 }
 
-- (void)transformModeCrossWithAnimation:(CGFloat)duration
+- (void)transformFromHamburgerToCross:(CGFloat)duration
 {
     {
         CAKeyframeAnimation *animation = [self createKeyFrameAnimation:duration];
-        animation.values = [self crossValuesTopLayer];
+        animation.values = [self hamburgerToCrossValuesTopLayer];
         [topLayer addAnimation:animation forKey:@"transform"];
     }
     
     {
         CAKeyframeAnimation *animation = [self createKeyFrameAnimation:duration];
-        animation.values = [self crossValuesMiddleLayer];
+        animation.values = [self hamburgerToCrossValuesMiddleLayer];
         [middleLayer addAnimation:animation forKey:@"transform"];
     }
     
     {
         CAKeyframeAnimation *animation = [self createKeyFrameAnimation:duration];
-        animation.values = [self crossValuesBottomLayer];
+        animation.values = [self hamburgerToCrossValuesBottomLayer];
         [bottomLayer addAnimation:animation forKey:@"transform"];
     }
 }
+
+- (void)transformFromArrowToHamburger:(CGFloat)duration
+{
+    {
+        CAKeyframeAnimation *animation = [self createKeyFrameAnimation:duration];
+        animation.values = [self reverseValues:[self hamburgerToArrowValuesTopLayer]];
+        [topLayer addAnimation:animation forKey:@"transform"];
+    }
+    
+    {
+        CAKeyframeAnimation *animation = [self createKeyFrameAnimation:duration];
+        animation.values = [self reverseValues:[self hamburgerToArrowValuesMiddleLayer]];
+        [middleLayer addAnimation:animation forKey:@"transform"];
+    }
+    
+    {
+        CAKeyframeAnimation *animation = [self createKeyFrameAnimation:duration];
+        animation.values = [self reverseValues:[self hamburgerToArrowValuesBottomLayer]];
+        [bottomLayer addAnimation:animation forKey:@"transform"];
+    }
+}
+
+- (void)transformFromArrowToCross:(CGFloat)duration
+{
+    {
+        CAKeyframeAnimation *animation = [self createKeyFrameAnimation:duration];
+        animation.values = [self arrowToCrossValuesTopLayer];
+        [topLayer addAnimation:animation forKey:@"transform"];
+    }
+    
+    {
+        CAKeyframeAnimation *animation = [self createKeyFrameAnimation:duration];
+        animation.values = [self arrowToCrossValuesMiddleLayer];
+        [middleLayer addAnimation:animation forKey:@"transform"];
+    }
+    
+    {
+        CAKeyframeAnimation *animation = [self createKeyFrameAnimation:duration];
+        animation.values = [self arrowToCrossValuesBottomLayer];
+        [bottomLayer addAnimation:animation forKey:@"transform"];
+    }
+}
+
+- (void)transformFromCrossToHamburger:(CGFloat)duration
+{
+    {
+        CAKeyframeAnimation *animation = [self createKeyFrameAnimation:duration];
+        animation.values = [self reverseValues:[self hamburgerToCrossValuesTopLayer]];
+        [topLayer addAnimation:animation forKey:@"transform"];
+    }
+    
+    {
+        CAKeyframeAnimation *animation = [self createKeyFrameAnimation:duration];
+        animation.values = [self reverseValues:[self hamburgerToCrossValuesMiddleLayer]];
+        [middleLayer addAnimation:animation forKey:@"transform"];
+    }
+    
+    {
+        CAKeyframeAnimation *animation = [self createKeyFrameAnimation:duration];
+        animation.values = [self reverseValues:[self hamburgerToCrossValuesBottomLayer]];
+        [bottomLayer addAnimation:animation forKey:@"transform"];
+    }
+}
+
+- (void)transformFromCrossToArrow:(CGFloat)duration
+{
+    {
+        CAKeyframeAnimation *animation = [self createKeyFrameAnimation:duration];
+        animation.values = [self reverseValues:[self arrowToCrossValuesTopLayer]];
+        [topLayer addAnimation:animation forKey:@"transform"];
+    }
+    
+    {
+        CAKeyframeAnimation *animation = [self createKeyFrameAnimation:duration];
+        animation.values = [self reverseValues:[self arrowToCrossValuesMiddleLayer]];
+        [middleLayer addAnimation:animation forKey:@"transform"];
+    }
+    
+    {
+        CAKeyframeAnimation *animation = [self createKeyFrameAnimation:duration];
+        animation.values = [self reverseValues:[self arrowToCrossValuesBottomLayer]];
+        [bottomLayer addAnimation:animation forKey:@"transform"];
+    }
+}
+
+#pragma mark -
 
 - (CAKeyframeAnimation *)createKeyFrameAnimation:(CGFloat)duration
 {
@@ -355,45 +431,44 @@
 - (NSArray *)reverseValues:(NSArray *)values
 {
     NSMutableArray *newValues = [values mutableCopy];
-    
-    [newValues removeObjectAtIndex:0];
     newValues = [[[newValues reverseObjectEnumerator] allObjects] mutableCopy];
-    [newValues addObject:[NSValue valueWithCATransform3D:CATransform3DIdentity]];
     
     return newValues;
 }
 
-#pragma mark - Mode Arrow
+#pragma mark - Hamburger / Arrow
 
-- (NSArray *)arrowValuesTopLayer
+- (NSArray *)hamburgerToArrowValuesTopLayer
 {
-    CGFloat endAngle = M_PI + M_PI_4;
+    CGFloat NUMBER_VALUES = 4;
+    
+    CGFloat startScaleFactor = 1.;
     CGFloat endScaleFactor = .5;
     
-    CGFloat NUMBER_VALUES = 4;
+    CGFloat endAngle = M_PI + M_PI_4;
     
     NSMutableArray *values = [NSMutableArray new];
     
     for(int i = 0; i < NUMBER_VALUES; ++i){
         CGFloat angle = endAngle / (NUMBER_VALUES - 1.) * i;
-        CGFloat scaleFactor = 1. - (1. - endScaleFactor) * i / (NUMBER_VALUES - 1.);
+        CGFloat scaleFactor = startScaleFactor + (endScaleFactor - startScaleFactor) * i / (NUMBER_VALUES - 1.);
         
         CATransform3D t = CATransform3DIdentity;
         
         // Translate to bottom position
-        CGFloat translateY = (middleLayer.position.y + (self.lineWidth / 2.)) - topLayer.position.y;
         CGFloat translateX = 0;
+        CGFloat translateY = (middleLayer.position.y + (self.lineWidth / 2.)) - topLayer.position.y;
         
         // Translate for 45 degres rotation
-        translateY += (1. - fabs(sinf(endAngle))) * self.lineWidth / 2. * -1. * (1. / endScaleFactor);
         translateX += (1. - fabs(cosf(endAngle))) * self.lineWidth / 2. * -1. * (1. / endScaleFactor);
+        translateY += (1. - fabs(sinf(endAngle))) * self.lineWidth / 2. * -1. * (1. / endScaleFactor);
         
         // Hack
-        translateY -= 1.;
         translateX -= 1.;
+        translateY -= 1.;
         
-        translateY *= i / (NUMBER_VALUES - 1.);
         translateX *= i / (NUMBER_VALUES - 1.);
+        translateY *= i / (NUMBER_VALUES - 1.);
         
         // Hack avoiding topLayer cross middleLayer
         if(i == 1){
@@ -416,18 +491,20 @@
     return values;
 }
 
-- (NSArray *)arrowValuesMiddleLayer
+- (NSArray *)hamburgerToArrowValuesMiddleLayer
 {
-    CGFloat endAngle = M_PI;
-    CGFloat endScaleFactor = .8;
-    
     CGFloat NUMBER_VALUES = 4;
+    
+    CGFloat startScaleFactor = 1.;
+    CGFloat endScaleFactor = MIDDLE_SCALE_FACTOR;
+    
+    CGFloat endAngle = M_PI;
     
     NSMutableArray *values = [NSMutableArray new];
     
     for(int i = 0; i < NUMBER_VALUES; ++i){
         CGFloat angle = endAngle / (NUMBER_VALUES - 1.) * i;
-        CGFloat scaleFactor = 1. - (1. - endScaleFactor) * i / (NUMBER_VALUES - 1.);
+        CGFloat scaleFactor = startScaleFactor + (endScaleFactor - startScaleFactor) * i / (NUMBER_VALUES - 1.);
         
         CATransform3D t = CATransform3DIdentity;
         
@@ -442,35 +519,37 @@
     return values;
 }
 
-- (NSArray *)arrowValuesBottomLayer
+- (NSArray *)hamburgerToArrowValuesBottomLayer
 {
-    CGFloat endAngle = M_PI - M_PI_4;
-    CGFloat endScaleFactor = .5;
-    
     CGFloat NUMBER_VALUES = 4;
     
+    CGFloat startScaleFactor = 1.;
+    CGFloat endScaleFactor = .5;
+    
+    CGFloat endAngle = M_PI - M_PI_4;
+    
     NSMutableArray *values = [NSMutableArray new];
-        
+    
     for(int i = 0; i < NUMBER_VALUES; ++i){
         CGFloat angle = endAngle / (NUMBER_VALUES - 1.) * i;
-        CGFloat scaleFactor = 1. - (1. - endScaleFactor) * i / (NUMBER_VALUES - 1.);
+        CGFloat scaleFactor = startScaleFactor + (endScaleFactor - startScaleFactor) * i / (NUMBER_VALUES - 1.);
         
         CATransform3D t = CATransform3DIdentity;
         
         // Translate to bottom position
-        CGFloat translateY = (middleLayer.position.y - (self.lineWidth / 2.)) - bottomLayer.position.y;
         CGFloat translateX = 0;
+        CGFloat translateY = (middleLayer.position.y - (self.lineWidth / 2.)) - bottomLayer.position.y;
         
         // Translate for 45 degres rotation
-        translateY += (1. - fabs(sinf(endAngle))) * self.lineWidth / 2. * (1. / endScaleFactor);
         translateX += (1. - fabs(cosf(endAngle))) * self.lineWidth / 2. * -1. * (1. / endScaleFactor);
+        translateY += (1. - fabs(sinf(endAngle))) * self.lineWidth / 2. * (1. / endScaleFactor);
         
         // Hack
-        translateY += 1.;
         translateX -= 1.;
+        translateY += 1.;
         
-        translateY *= i / (NUMBER_VALUES - 1.);
         translateX *= i / (NUMBER_VALUES - 1.);
+        translateY *= i / (NUMBER_VALUES - 1.);
         
         t = CATransform3DTranslate(t, translateX, translateY, 0);
         t = CATransform3DRotate(t, angle, 0, 0, 1);
@@ -483,13 +562,13 @@
     return values;
 }
 
-#pragma mark - Mode Cross
+#pragma mark - Hamburger / Cross
 
-- (NSArray *)crossValuesTopLayer
+- (NSArray *)hamburgerToCrossValuesTopLayer
 {
-    CGFloat endAngle = M_PI_4;
-
     CGFloat NUMBER_VALUES = 4;
+    
+    CGFloat endAngle = M_PI_4;
     
     NSMutableArray *values = [NSMutableArray new];
     
@@ -511,16 +590,17 @@
     return values;
 }
 
-- (NSArray *)crossValuesMiddleLayer
+- (NSArray *)hamburgerToCrossValuesMiddleLayer
 {
-    CGFloat endScaleFactor = .0;
-    
     CGFloat NUMBER_VALUES = 4;
+    
+    CGFloat startScaleFactor = 1.;
+    CGFloat endScaleFactor = .0;
     
     NSMutableArray *values = [NSMutableArray new];
     
     for(int i = 0; i < NUMBER_VALUES; ++i){
-        CGFloat scaleFactor = 1. - (1. - endScaleFactor) * i / (NUMBER_VALUES - 1.);
+        CGFloat scaleFactor = startScaleFactor + (endScaleFactor - startScaleFactor) * i / (NUMBER_VALUES - 1.);
         
         CATransform3D t = CATransform3DIdentity;
         t = CATransform3DScale(t, scaleFactor, 1., 1.);
@@ -532,11 +612,11 @@
     return values;
 }
 
-- (NSArray *)crossValuesBottomLayer
+- (NSArray *)hamburgerToCrossValuesBottomLayer
 {
-    CGFloat endAngle = - M_PI_4;
-    
     CGFloat NUMBER_VALUES = 4;
+    
+    CGFloat endAngle = - M_PI_4;
     
     NSMutableArray *values = [NSMutableArray new];
     
@@ -550,6 +630,130 @@
         
         t = CATransform3DTranslate(t, 0, translateY, 0);
         t = CATransform3DRotate(t, angle, 0, 0, 1);
+        
+        NSValue *value = [NSValue valueWithCATransform3D:t];
+        [values addObject:value];
+    }
+    
+    return values;
+}
+
+#pragma mark - Arrow / Cross
+
+- (NSArray *)arrowToCrossValuesTopLayer
+{
+    CGFloat NUMBER_VALUES = 4;
+    
+    CGFloat startScaleFactor = .5;
+    CGFloat endScaleFactor = 1.;
+    
+    CGFloat startTranslateX = 0;
+    CGFloat startTranslateY = 0;
+    CGFloat endTranslateX = 0;
+    CGFloat endTranslateY = middleLayer.position.y - topLayer.position.y;
+    
+    CGFloat angle = M_PI_4;
+    
+    {
+        // Final position
+        startTranslateX = self.lineWidth * (1. - MIDDLE_SCALE_FACTOR) / 2.;
+        startTranslateY = middleLayer.position.y - topLayer.position.y;
+        
+        // cancel scaleFactor
+        startTranslateX += (self.lineWidth * (1. - startScaleFactor)) / 2. * -1.;
+        
+        // cancel rotation
+        startTranslateX += fabs(cosf(angle)) * (self.lineWidth * startScaleFactor) / 2. * -1.;
+        startTranslateY += fabs(sinf(angle)) * (self.lineWidth * startScaleFactor) / 2.;
+        
+        // Hack
+        startTranslateX += 2.;
+    }
+    
+    NSMutableArray *values = [NSMutableArray new];
+    
+    for(int i = 0; i < NUMBER_VALUES; ++i){
+        CGFloat scaleFactor = startScaleFactor + (endScaleFactor - startScaleFactor) * i / (NUMBER_VALUES - 1.);
+        CGFloat translateX = startTranslateX + (endTranslateX - startTranslateX) * i / (NUMBER_VALUES - 1.);
+        CGFloat translateY = startTranslateY + (endTranslateY - startTranslateY) * i / (NUMBER_VALUES - 1.);
+        
+        CATransform3D t = CATransform3DIdentity;
+        
+        t = CATransform3DTranslate(t, translateX, translateY, 0);
+        t = CATransform3DRotate(t, angle, 0, 0, 1);
+        t = CATransform3DScale(t, scaleFactor, 1., 1.);
+        
+        NSValue *value = [NSValue valueWithCATransform3D:t];
+        [values addObject:value];
+    }
+    
+    return values;
+}
+
+- (NSArray *)arrowToCrossValuesMiddleLayer
+{
+    CGFloat NUMBER_VALUES = 4;
+    
+    CGFloat startScaleFactor = MIDDLE_SCALE_FACTOR;
+    CGFloat endScaleFactor = .0;
+    
+    NSMutableArray *values = [NSMutableArray new];
+    
+    for(int i = 0; i < NUMBER_VALUES; ++i){
+        CGFloat scaleFactor = startScaleFactor + (endScaleFactor - startScaleFactor) * i / (NUMBER_VALUES - 1.);
+        
+        CATransform3D t = CATransform3DIdentity;
+        t = CATransform3DScale(t, scaleFactor, 1., 1.);
+        
+        NSValue *value = [NSValue valueWithCATransform3D:t];
+        [values addObject:value];
+    }
+    
+    return values;
+}
+
+- (NSArray *)arrowToCrossValuesBottomLayer
+{
+    CGFloat NUMBER_VALUES = 4;
+    
+    CGFloat startScaleFactor = .5;
+    CGFloat endScaleFactor = 1.;
+    
+    CGFloat startTranslateX = 0;
+    CGFloat startTranslateY = 0;
+    CGFloat endTranslateX = 0;
+    CGFloat endTranslateY = middleLayer.position.y - bottomLayer.position.y;
+    
+    CGFloat angle = - M_PI_4;
+    
+    {
+        // Final position
+        startTranslateX = self.lineWidth * (1. - MIDDLE_SCALE_FACTOR) / 2.;
+        startTranslateY = - (bottomLayer.position.y - middleLayer.position.y);
+        
+        // cancel scaleFactor
+        startTranslateX += (self.lineWidth * (1. - startScaleFactor)) / 2. * -1.;
+        
+        // cancel rotation
+        startTranslateX += fabs(cosf(angle)) * (self.lineWidth * startScaleFactor) / 2. * -1.;
+        startTranslateY += fabs(sinf(angle)) * (self.lineWidth * startScaleFactor) / 2. * -1.;
+        
+        // Hack
+        startTranslateX += 2.;
+    }
+    
+    NSMutableArray *values = [NSMutableArray new];
+    
+    for(int i = 0; i < NUMBER_VALUES; ++i){
+        CGFloat scaleFactor = startScaleFactor + (endScaleFactor - startScaleFactor) * i / (NUMBER_VALUES - 1.);
+        CGFloat translateX = startTranslateX + (endTranslateX - startTranslateX) * i / (NUMBER_VALUES - 1.);
+        CGFloat translateY = startTranslateY + (endTranslateY - startTranslateY) * i / (NUMBER_VALUES - 1.);
+        
+        CATransform3D t = CATransform3DIdentity;
+        
+        t = CATransform3DTranslate(t, translateX, translateY, 0);
+        t = CATransform3DRotate(t, angle, 0, 0, 1);
+        t = CATransform3DScale(t, scaleFactor, 1., 1.);
         
         NSValue *value = [NSValue valueWithCATransform3D:t];
         [values addObject:value];

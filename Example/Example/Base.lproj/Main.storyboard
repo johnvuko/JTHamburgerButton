@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6751" systemVersion="14C1510" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="vXZ-lx-hvc">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7702" systemVersion="14D136" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="vXZ-lx-hvc">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6736"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7701"/>
     </dependencies>
     <scenes>
         <!--View Controller-->
@@ -42,18 +42,34 @@
                                     <action selector="didCloseButtonTouch:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="UtD-Dc-MSs"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xIh-yY-P9W" customClass="JTHamburgerButton">
+                                <rect key="frame" x="280" y="420" width="40" height="40"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="40" id="INo-6B-ZNS"/>
+                                    <constraint firstAttribute="height" constant="40" id="fkl-fv-mYZ"/>
+                                </constraints>
+                                <state key="normal">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="didCrossToArrowButtonButtonTouch:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="Pmf-tG-PbD"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
                             <constraint firstAttribute="centerY" secondItem="Neo-gk-bgs" secondAttribute="centerY" constant="-40" id="3sJ-F3-qkV"/>
                             <constraint firstAttribute="centerX" secondItem="QSS-p4-6JP" secondAttribute="centerX" id="In6-8r-28s"/>
                             <constraint firstAttribute="centerX" secondItem="Neo-gk-bgs" secondAttribute="centerX" id="QRi-Re-qPJ"/>
+                            <constraint firstItem="2fi-mo-0CV" firstAttribute="top" secondItem="xIh-yY-P9W" secondAttribute="bottom" constant="140" id="SOX-f3-VHX"/>
                             <constraint firstAttribute="centerY" secondItem="QSS-p4-6JP" secondAttribute="centerY" constant="40" id="aaf-1z-pKH"/>
+                            <constraint firstAttribute="centerX" secondItem="xIh-yY-P9W" secondAttribute="centerX" id="g3o-wO-JFD"/>
                         </constraints>
                     </view>
                     <connections>
                         <outlet property="backButton" destination="QSS-p4-6JP" id="7tK-K5-kXx"/>
                         <outlet property="closeButton" destination="Neo-gk-bgs" id="io7-9P-Ejl"/>
+                        <outlet property="crossToArrowButton" destination="xIh-yY-P9W" id="afC-g7-Dp4"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x5A-6p-PRh" sceneMemberID="firstResponder"/>

@@ -13,6 +13,13 @@
 
 @implementation ViewController
 
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    
+    [self.crossToArrowButton setCurrentMode:JTHamburgerButtonModeArrow];
+}
+
 - (IBAction)didBackButtonTouch:(JTHamburgerButton *)sender
 {
     if(sender.currentMode == JTHamburgerButtonModeHamburger){
@@ -30,6 +37,16 @@
     }
     else{
         [sender setCurrentModeWithAnimation:JTHamburgerButtonModeHamburger];
+    }
+}
+
+- (IBAction)didCrossToArrowButtonButtonTouch:(JTHamburgerButton *)sender
+{
+    if(sender.currentMode == JTHamburgerButtonModeArrow){
+        [sender setCurrentModeWithAnimation:JTHamburgerButtonModeCross];
+    }
+    else{
+        [sender setCurrentModeWithAnimation:JTHamburgerButtonModeArrow];
     }
 }
 

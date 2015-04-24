@@ -13,6 +13,7 @@
 
 @property (weak, nonatomic) IBOutlet JTHamburgerButton *backButton;
 @property (weak, nonatomic) IBOutlet JTHamburgerButton *closeButton;
+@property (weak, nonatomic) IBOutlet JTHamburgerButton *crossToArrowButton;
 
 @end
 
