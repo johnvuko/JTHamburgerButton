@@ -13,6 +13,8 @@
     CAShapeLayer *topLayer;
     CAShapeLayer *middleLayer;
     CAShapeLayer *bottomLayer;
+    
+    CGRect lastBounds;
 }
 
 @end
@@ -123,8 +125,19 @@
     self->_currentMode = currentMode;
 }
 
+- (void)layoutSubviews
+{
+    [super layoutSubviews];
+    
+    if(!CGRectEqualToRect(lastBounds, self.bounds)){
+        [self updateAppearance];
+    }
+}
+
 - (void)updateAppearance
 {
+    lastBounds = self.bounds;
+    
     [topLayer removeFromSuperlayer];
     [middleLayer removeFromSuperlayer];
     [bottomLayer removeFromSuperlayer];
