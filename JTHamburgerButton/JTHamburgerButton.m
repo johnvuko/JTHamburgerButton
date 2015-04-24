@@ -174,6 +174,7 @@
     
     CGPathRef bound = CGPathCreateCopyByStrokingPath(layer.path, nil, layer.lineWidth, kCGLineCapButt, kCGLineJoinMiter, layer.miterLimit);
     layer.bounds = CGPathGetBoundingBox(bound);
+    CGPathRelease(bound);
     
     [self.layer addSublayer:layer];
     
