@@ -91,3 +91,7 @@ After the change of one of this properties you have to call `updateAppearance` t
 ## License
 
 JTHamburgerButton is released under the MIT license. See the LICENSE file for more info.
+
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/jonathantribouharet/jthamburgerbutton/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
